@@ -284,6 +284,7 @@ DIST          = ../../Qt/6.2.4/gcc_64/mkspecs/features/spec_pre.prf \
 		../../Qt/6.2.4/gcc_64/mkspecs/features/qt_config.prf \
 		../../Qt/6.2.4/gcc_64/mkspecs/linux-g++/qmake.conf \
 		../../Qt/6.2.4/gcc_64/mkspecs/features/spec_post.prf \
+		../Red/.qmake.stash \
 		../../Qt/6.2.4/gcc_64/mkspecs/features/exclusive_builds.prf \
 		../../Qt/6.2.4/gcc_64/mkspecs/features/toolchain.prf \
 		../../Qt/6.2.4/gcc_64/mkspecs/features/default_pre.prf \
@@ -297,7 +298,8 @@ DIST          = ../../Qt/6.2.4/gcc_64/mkspecs/features/spec_pre.prf \
 		../../Qt/6.2.4/gcc_64/mkspecs/features/exceptions.prf \
 		../../Qt/6.2.4/gcc_64/mkspecs/features/yacc.prf \
 		../../Qt/6.2.4/gcc_64/mkspecs/features/lex.prf \
-		../Red/Red.pro  ../Red/main.cpp
+		../Red/Red.pro mejor_camino.h \
+		objetos.h ../Red/main.cpp
 QMAKE_TARGET  = Red
 DESTDIR       = 
 TARGET        = Red
@@ -539,6 +541,7 @@ Makefile: ../Red/Red.pro ../../Qt/6.2.4/gcc_64/mkspecs/linux-g++/qmake.conf ../.
 		../../Qt/6.2.4/gcc_64/mkspecs/features/qt_config.prf \
 		../../Qt/6.2.4/gcc_64/mkspecs/linux-g++/qmake.conf \
 		../../Qt/6.2.4/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../Qt/6.2.4/gcc_64/mkspecs/features/exclusive_builds.prf \
 		../../Qt/6.2.4/gcc_64/mkspecs/features/toolchain.prf \
 		../../Qt/6.2.4/gcc_64/mkspecs/features/default_pre.prf \
@@ -784,6 +787,7 @@ Makefile: ../Red/Red.pro ../../Qt/6.2.4/gcc_64/mkspecs/linux-g++/qmake.conf ../.
 ../../Qt/6.2.4/gcc_64/mkspecs/features/qt_config.prf:
 ../../Qt/6.2.4/gcc_64/mkspecs/linux-g++/qmake.conf:
 ../../Qt/6.2.4/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../Qt/6.2.4/gcc_64/mkspecs/features/exclusive_builds.prf:
 ../../Qt/6.2.4/gcc_64/mkspecs/features/toolchain.prf:
 ../../Qt/6.2.4/gcc_64/mkspecs/features/default_pre.prf:
@@ -841,7 +845,8 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../Red/main.cpp 
+main.o: ../Red/main.cpp ../Red/mejor_camino.h \
+		../Red/objetos.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../Red/main.cpp
 
 ####### Install
