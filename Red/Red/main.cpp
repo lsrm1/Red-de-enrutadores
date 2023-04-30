@@ -1,56 +1,11 @@
 #include <iostream>
 #include <map>
-#include <string>
-#include <vector>
-#include <algorithm>
 
 using namespace std;
 
-void way(char router,map<char, map<char, int>> &red, char origen, char destino, int &costo, vector<char> &ruta ){
+class Router{
 
-    map<char, int>:: iterator m;
-    map<char, int>:: iterator p;
-    vector<char>:: iterator f;
-
-    char _router;
-
-
-    for (m = red[router].begin() ;  m != red[router].end(); m++){
-
-        f = find(ruta.begin(), ruta.end(), m ->first);
-
-        if ( f == ruta.end() ){
-
-            p = red[ m -> first ].find(destino);
-
-            if ( p != red[ m-> first ].end()){
-
-
-                ruta.push_back( m -> first);
-                ruta.push_back( p -> first);
-
-                costo += m -> second;
-                costo += p -> second;
-
-
-            }
-
-            else{
-
-                costo += m -> second;
-                _router = m -> first;
-                ruta.push_back( m -> first);
-                way( _router ,red, origen, destino, costo, ruta);
-
-            }
-
-        }
-    }
-}
-
-
-/*class Router{
-    public:
+   public:
     map <char,int> tabla;
 
     public:
@@ -58,168 +13,160 @@ void way(char router,map<char, map<char, int>> &red, char origen, char destino, 
 
 };
 
-Router::Router(char id, int costo){
-    tabla.insert(pair<char,int>(id,costo));
+Router :: Router( char id,  int costo ){
+    tabla.insert (pair <char,int> (id,costo) );
 }
 
 class Red{
+
     public:
+
     map<char, map<char, int>> mapared;
 
     public:
-    Red();
 
-    void agregarouter( char id, map<char, int> tabla ){
-        mapared.insert(pair< char, map<char, int> >(id,tabla));
+    void agregarouter( ){
+
+        char rep = 'y';
+        char id ;
+
+        cout<< "Agrega ID de los enrutadores\n";
+
+        do{
+
+            cout<<"ID: ";cin>> id;
+
+            Router router = Router(id,0);
+            mapared.insert(pair< char, map<char, int> >(id,router.tabla));
+
+            cout<<"Agregar otro enrutador ?(y/n) : ";cin>>rep;
+
+        }while(rep == 'y');
+
+
     }
 
-    void conectar(char id, char _id,int costo){
+    void conectar(){
 
-        mapared[id].insert(pair<char,int>(_id,costo));
-        mapared[_id].insert(pair<char,int>(id,costo));;
+        char id;
+        char _id;
+        int costo;
+        char rep = 'y';
+
+        do{
+
+            cout<< "Conexiones...\nID: "; cin>>id;
+            cout<<"Conectar al ID: ";cin>>_id;
+            cout<<"Costo de la conexion: "; cin>> costo;
+
+            mapared[id].insert(pair<char,int>(_id,costo));
+            mapared[_id].insert(pair<char,int>(id,costo));
+
+            cout<<"Agregar otro conexion?: ";cin>>rep;
+
+        }while(rep == 'y');
+
+
     }
 
- };
+    void modifcosto (){
 
-Red::Red(){};
+        char id;
+        char _id;
+        int newcosto;
+
+        cout<<"ID: "; cin>>id;
+        cout<<"Modicar costo con el  ID: ";cin>>_id;
+        cout<<"Nuevo costo de la conexion: "; cin>> newcosto;
+
+        mapared[id][_id] = newcosto;
+        mapared[_id][id] = newcosto;
+    }
+
+    void removerouter (){
+
+        char id;
+
+        cout<<"ID del enrutador a remover: "; cin>>id;
+
+
+        mapared.erase(id);
+
+        map<char, map<char, int>>:: iterator it;
+
+        for (it = mapared.begin() ;  it != mapared.end(); it++){
+
+            mapared [ it -> first ].erase(id);
+
+        }
+    }
+};
+
+void menuprincipal(int &menu){
+
+    cout<<"____________________________________________________";
+    cout<<"\nMENU PRINCIPAL\n";
+    cout<<"\n1. Crear red \n2. Modificar red\n3. Buscar “El mejor camino” \n4. Salir\n\nSelecciona:";
+    cout<<"____________________________________________________";
+    cin>>menu;
+}
+
 
 int main()
 {
-    char id ;
-    char _id;
-    int costo = 0;
-    char rep = 'y';
 
-    Red red = Red();
+    int menu = 0;
+    int opcion = 0;
 
-    do{
-        cout<<"id: ";cin>> id;
-        Router router = Router(id,costo);
-        red.agregarouter( id,router.tabla );
-        cout<<"Agregar otro router?: ";cin>>rep;
+    bool ejecutar = true;
+    Red red;
 
-    }while(rep == 'y');
+    while (ejecutar){
 
-    do{
+        menuprincipal(menu);
 
-        cout<< "Conexiones:\nQue router va a conectar? "; cin>>id;
-        cout<<"A cual router lo va a conectar: ";cin>>_id;
-        cout<<"Costo de la conexion: "; cin>> costo;
-        red.conectar(id,_id,costo);
-        cout<<"Agregar otro conexion?: ";cin>>rep;
+        if (menu == 1){
 
-    }while(rep == 'y');*/
+            red.agregarouter( );
+            red.conectar();
 
-int main(){
-    int costo = 0;
-    vector<char> ruta;
-    char origen = 'A';
-    char destino = 'C';
-    char router ;
-    vector <int> allway ;
-    vector <vector<char>> allruta;
-    map<char, map<char, int>> red;
-    int minimo = 1000;
+        }
 
+        if (menu == 2){
 
-    red.insert(make_pair('A', map<char, int> {make_pair('A', 0)}));
-    red['A'].insert(pair<char,int>('B', 4));
-    red['A'].insert(pair<char,int>('C', 10));
-    //red['A'].insert(pair<char,int>('E', 15));
-    red['A'].insert(pair<char,int>('F', 5));
-    red.insert(make_pair('B', map<char,int> {make_pair('B', 0)}));
-    red['B'].insert(pair<char,int>('A', 4));
-    //red['B'].insert(pair<char,int>('C', 6));
-    red['B'].insert(pair<char,int>('E', 1));
-    red.insert(make_pair('C', map<char, int> {make_pair('C', 0)}));
-    //red['C'].insert(pair<char,int>('B', 6));
-    red['C'].insert(pair<char,int>('A', 10));
-    red['C'].insert(pair<char,int>('E', 2));
-     red['C'].insert(pair<char,int>('F', 1));
-    red.insert(make_pair('E', map<char, int> {make_pair('E', 0)}));
-    //red['E'].insert(pair<char,int>('A', 10));
-    //red['E'].insert(pair<char,int>('C', 2));
-    red['E'].insert(pair<char,int>('B', 1));
-     red['E'].insert(pair<char,int>('F', 1));
-    red.insert(make_pair('F', map<char, int> {make_pair('F', 0)}));
-    red['F'].insert(pair<char,int>('A', 5));
-    red['F'].insert(pair<char,int>('C', 1));
-    red['F'].insert(pair<char,int>('E', 1));
+            cout<<"1. Agregar enrutadores a la red\n2. Modificar costos de  conexion\n"
+            "3. Remover enrutadores\nSelecciona: "; cin>>opcion;
 
+            if (opcion ==  1){
 
-
-   map<char, int>:: iterator i;
-   map<char, int>:: iterator it;
-   vector<char>:: iterator fi;
-
-
-    it = red[origen].find(destino);
-
-
-
-    if ( it != red[origen].end()){
-
-        ruta.push_back(origen);
-        ruta.push_back(destino);
-        allway.push_back(it -> second);
-        allruta.push_back(ruta);
-
-    }
-
-    ruta.clear();
-    ruta.push_back(origen);
-
-
-    for (it = red[origen].begin() ;  it != red[origen].end(); it++){
-
-        fi= find(ruta.begin(), ruta.end(), it ->first);
-
-        if ( fi == ruta.end() ){
-
-           i = red[ it-> first ].find(destino);
-
-            if ( i != red[ it-> first ].end()){
-
-                ruta.push_back( it-> first);
-                ruta.push_back( i-> first);
-
-                costo = it -> second;
-                costo += i -> second;
-
-                allway.push_back(costo);
-                allruta.push_back(ruta);
+                red.agregarouter( );
+                red.conectar();
 
             }
 
-            else{
+            if (opcion ==  2){
 
-                costo = it -> second;
-                router = it -> first;
-                ruta.push_back( it-> first);
+                red.modifcosto();
+            }
 
-                way(router,red, origen, destino, costo, ruta );
+            if (opcion ==  3){
 
-                allway.push_back(costo);
-                allruta.push_back(ruta);
+                red.removerouter();
 
             }
+
+        }
+
+        if (menu == 3){
+
+
 
 
         }
 
-    }
 
-    for (int l = 0 ; l < allway.size() ; l++){
-
-        if(allway[l] < minimo){
-
-         minimo = allway[l];
-         ruta = allruta[l];
-
-        }
 
     }
 
-
-  return 0;
-}
+    return 0;
+ }
